@@ -1,0 +1,45 @@
+{
+  "name": "kc-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "change": "npx prisma generate && npx prisma migrate dev --name init --create-only",
+    "migrate": "npx prisma migrate deploy",
+    "db-reset": "npx prisma migrate reset --force",
+    "format": "npx prisma format",
+    "cli": "ts-node src/console/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.3.0",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "i18n-iso-countries": "^7.13.0",
+    "ioredis": "^5.4.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "pg": "^8.13.1",
+    "redis": "^4.7.0",
+    "sharp": "^0.33.5",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.3.0"
+  }
+}
