@@ -34,3 +34,69 @@ model MemberProfilePicture {
     memberId  Int      @unique
     member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
+
+enum PropertyType {
+    WholeHome
+    PrivateRoom
+    GuestSuite
+    SharedApartment
+}
+
+model PropertyDetail {
+    id              Int               @id @default(autoincrement())
+    name            String            @unique
+    description     String
+    type            PropertyType
+    price           Int
+    PropertyAddress PropertyAddress[]
+    EssentialDetail EssentialDetail[]
+    PropertyFeature PropertyFeature[]
+    PropertyImage   PropertyImage?
+}
+
+model PropertyAddress {
+    id         Int            @id @default(autoincrement())
+    street     String
+    city       String
+    province   String
+    country    String
+    suite      String?
+    apartment  String?
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+    propertyId Int            @unique
+    property   PropertyDetail @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model EssentialDetail {
+    id         Int            @id @default(autoincrement())
+    guests     Int
+    bedrooms   Int
+    beds       Int
+    bathrooms  Int
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+    propertyId Int            @unique
+    property   PropertyDetail @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model PropertyFeature {
+    id         Int            @id @default(autoincrement())
+    features   Json
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+    propertyId Int            @unique
+    property   PropertyDetail @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model PropertyImage {
+    id         Int            @id @default(autoincrement())
+    image1     Json
+    image2     Json?
+    image3     Json?
+    image4     Json?
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+    propertyId Int            @unique
+    property   PropertyDetail @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
