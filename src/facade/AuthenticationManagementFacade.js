@@ -13,8 +13,8 @@ class AuthenticationManagementFacade extends BaseFacade {
         this.userOTPService = new UserOTP();
     }
 
-    async memberSignUp(memberData) {
-        return await this.userRegistrationService.memberSignUp(memberData);
+    async memberSignUp(memberData,file) {
+        return await this.userRegistrationService.memberSignUp(memberData,file);
     }
 
     async adminSignUp(adminData) {

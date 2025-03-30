@@ -2,13 +2,13 @@ const AdminKey = require("../cache/AdminKey");
 const env = require("../config/env");
 const HttpStatus = require("../constants/HttpStatus");
 const http = require("../constants/http");
-const { UserType } = require("../constants/static");
+const { UserType, ResourceType, CdnFolders } = require("../constants/static");
 const Password = require("../utils/Password");
 const CipherUtility = require("../utils/CipherUtility");
 const parseJson = require("../utils/parseJson");
-// const AdminService = require(".");
 const Token = require("./Token");
 const Authentication = require("./bases/Authentication");
+const Cloudinary = require("./Cloudinary");
 
 class UserRegistration extends Authentication {
 
@@ -16,29 +16,36 @@ class UserRegistration extends Authentication {
         super();
     }
 
-    async memberSignUp(memberData) {
-        const passwordHash = Password.hashPassword(memberData.password, this.storedSalt);
-        memberData.password = passwordHash;
+    async memberSignUp(memberData, file) {
+        const cloudinary = new Cloudinary();
+        const { uploadedFiles, failedFiles, publicIds } = await cloudinary.upload([file], ResourceType.IMAGE, CdnFolders.PROFILEPICTURE);
 
-        const repoResult = await this.memberRepo.insert(memberData);
-        const error = repoResult.error;
-        const statusCode = repoResult.type;
-        const message = !error ? "Member has been created successfully" : repoResult.message;
-        const result = repoResult.data;
+        if (uploadedFiles.length > 0) {
+            const passwordHash = Password.hashPassword(memberData.password, this.storedSalt);
+            memberData.password = passwordHash;            
 
-        if (!error) {
-            delete result.password;
-            const cacheSuccessful = await this.memberCache.set(
-                String(result.id),
-                result
-            );
+            const repoResult = await this.memberRepo.insert(memberData,uploadedFiles[0]);
+            const error = repoResult.error;
+            const statusCode = repoResult.type;
+            const message = !error ? "Member has been created successfully" : repoResult.message;
+            const result = repoResult.data;
+            result['profilePicture'] = result['profilePicture'][0].imageUrl;
 
-            return cacheSuccessful ? super.responseData(statusCode, error, message, {
-                token: Token.createToken(env('tokenSecret'), { id: result.id }, [UserType.Member]),
-                customer: result
-            }) : super.responseData(statusCode, error, message);
+            if (!error) {
+                delete result.password;
+                const cacheSuccessful = await this.memberCache.set(
+                    String(result.id),
+                    result
+                );
+
+                return cacheSuccessful ? super.responseData(statusCode, error, message, {
+                    token: Token.createToken(env('tokenSecret'), { id: result.id }, [UserType.Member]),
+                    customer: result
+                }) : super.responseData(statusCode, error, message);
+            }
+            return super.responseData(statusCode, error, message, result);
         }
-        return super.responseData(statusCode, error, message, result);
+        return this.responseData(500, true, "Something went wrong", failedFiles);
     }
 
     async adminSignUp(signUpData) {

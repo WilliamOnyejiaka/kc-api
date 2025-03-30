@@ -10,4 +10,16 @@ const OTPType = Object.freeze({
     Verification: "emailVerification"
 });
 
-module.exports = { UserType, OTPType }
+const ResourceType = Object.freeze({
+    IMAGE: "image",
+    VIDEO: "video",
+    AUDIO: "video",
+    PDF: "raw",
+    AUTO: "auto"
+});
+
+const CdnFolders = Object.freeze({
+    PROFILEPICTURE: "kc-cdn/profile-pictures",
+});
+
+module.exports = { UserType, OTPType, ResourceType, CdnFolders }

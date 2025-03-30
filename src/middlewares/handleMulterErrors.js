@@ -34,4 +34,4 @@ const handleMulterErrors = (err, req, res, next) => {
     next();
 }
 
-export default handleMulterErrors;
+module.exports = handleMulterErrors;

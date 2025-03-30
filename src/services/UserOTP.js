@@ -72,7 +72,7 @@ class UserOTP extends Authentication {
 
             return cacheSuccessful ? super.responseData(200, false, otpServiceResult.json.message, {
                 token: userType === "admin" ? this.generateAdminToken(userProfile) : this.generateUserToken(userProfile.id, userType),
-                vendor: userProfile
+                user: userProfile
             }) : super.responseData(500, true, constants('500'));
         }
         return super.responseData(404, true, constants('404User'));

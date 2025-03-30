@@ -6,14 +6,33 @@ class Member extends UserRepo {
         super('member', 'profilePicture');
     }
 
-    async insert(data) {
-        // const insertData = {
-        //     ...data.customerData,
-        //     Address: {
-        //         create: data.addressData
-        //     }
-        // };
-        return await super.insert(data);
+    async insert(data, media) {
+        try {
+            const newItem = await prisma.member.create({
+                data: {
+                    ...data,
+                    profilePicture: {
+                        create: {
+                            mimeType: media.mimeType,
+                            size: media.size,
+                            imageUrl: media.imageUrl,
+                            publicId: media.publicId
+                        }
+                    }
+                },
+                include:{
+                    profilePicture: {
+                        select: {
+                            imageUrl: true
+                        }
+                    }
+                }
+            })
+            return this.repoResponse(false, 201, null, newItem);
+        } catch (error) {
+            console.log(error)
+            return this.handleDatabaseError(error);
+        }
     }
 }
 

@@ -1,8 +1,11 @@
 const validateBody = require('./validateBody.js');
 const { emailIsValid, userPhoneNumberExists, userEmailExists,passwordIsValid } = require("./validators.js");
 const Member = require('./../../repos/Member.js');
+const upload = require('./../../middlewares/multer.js');
+const { ResourceType } = require('../../constants/static.js');
 
 const memberSignUp = [
+    upload(ResourceType.IMAGE).single('profilePicture'),
     validateBody([
         'firstName',
         'lastName',

@@ -28,7 +28,7 @@ model MemberProfilePicture {
     mimeType  String
     imageUrl  String
     publicId  String
-    size      Int
+    size      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     memberId  Int      @unique

@@ -1,13 +1,5 @@
-const ImageService = require("../../services/Image.js");
 
 class Controller {
-
-    static imageService = new ImageService();
-
-    static async deleteFiles(files) {
-        return await Controller.imageService.deleteFiles(files);
-    }
-
     static paginate(service) {
         return async (req, res) => {
             const { page, pageSize } = req.query;

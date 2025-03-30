@@ -62,7 +62,7 @@ class Auth {
             password: req.body.password,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber
-        });
+        }, req.file);
         Controller.response(res, serviceResult);
     }
 

@@ -53,4 +53,4 @@ const validateJWT = (types, tokenSecret, neededData = ['data']) => async (req, r
     next();
 }
 
-export default validateJWT;
+module.exports = validateJWT;
