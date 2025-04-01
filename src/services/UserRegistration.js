@@ -16,31 +16,31 @@ class UserRegistration extends Authentication {
         super();
     }
 
-    async memberSignUp(memberData, file) {
+    async userSignUp(memberData, file) {
         const cloudinary = new Cloudinary();
         const { uploadedFiles, failedFiles, publicIds } = await cloudinary.upload([file], ResourceType.IMAGE, CdnFolders.PROFILEPICTURE);
 
         if (uploadedFiles.length > 0) {
             const passwordHash = Password.hashPassword(memberData.password, this.storedSalt);
-            memberData.password = passwordHash;            
+            memberData.password = passwordHash;
 
-            const repoResult = await this.memberRepo.insert(memberData,uploadedFiles[0]);
+            const repoResult = await this.userRepo.insert(memberData, uploadedFiles[0]);
             const error = repoResult.error;
             const statusCode = repoResult.type;
-            const message = !error ? "Member has been created successfully" : repoResult.message;
+            const message = !error ? "User has been created successfully" : repoResult.message;
             const result = repoResult.data;
             result['profilePicture'] = result['profilePicture'][0].imageUrl;
 
             if (!error) {
                 delete result.password;
-                const cacheSuccessful = await this.memberCache.set(
+                const cacheSuccessful = await this.userCache.set(
                     String(result.id),
                     result
                 );
 
                 return cacheSuccessful ? super.responseData(statusCode, error, message, {
-                    token: Token.createToken(env('tokenSecret'), { id: result.id }, [UserType.Member]),
-                    customer: result
+                    token: Token.createToken(env('tokenSecret'), { id: result.id }, [UserType.User]),
+                    user: result
                 }) : super.responseData(statusCode, error, message);
             }
             return super.responseData(statusCode, error, message, result);

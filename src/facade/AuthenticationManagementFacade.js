@@ -13,8 +13,8 @@ class AuthenticationManagementFacade extends BaseFacade {
         this.userOTPService = new UserOTP();
     }
 
-    async memberSignUp(memberData,file) {
-        return await this.userRegistrationService.memberSignUp(memberData,file);
+    async userSignUp(userData, file) {
+        return await this.userRegistrationService.userSignUp(userData, file);
     }
 
     async adminSignUp(adminData) {
@@ -30,7 +30,7 @@ class AuthenticationManagementFacade extends BaseFacade {
     async login(email, password, user) {
         const loginMethods = {
             [UserType.Admin]: this.authService.adminLogin.bind(this.authService),
-            [UserType.Member]: this.authService.memberLogin.bind(this.authService),
+            [UserType.User]: this.authService.userLogin.bind(this.authService),
         };
 
         const loginMethod = loginMethods[user];
@@ -54,7 +54,7 @@ class AuthenticationManagementFacade extends BaseFacade {
     async sendUserOTP(email, otpType, user) {
         const sendOTPMethods = {
             [UserType.Admin]: this.userOTPService.sendAdminOTP.bind(this.userOTPService),
-            [UserType.Member]: this.userOTPService.sendMemberOTP.bind(this.userOTPService)
+            [UserType.User]: this.userOTPService.sendUserOTP.bind(this.userOTPService)
         };
 
         const sendOTPMethod = sendOTPMethods[user];
@@ -70,7 +70,7 @@ class AuthenticationManagementFacade extends BaseFacade {
     async emailVerification(email, otpCode, user) {
         const verifyEmailMethods = {
             [UserType.Admin]: this.userOTPService.adminEmailVerification.bind(this.userOTPService),
-            [UserType.Member]: this.userOTPService.memberEmailVerification.bind(this.userOTPService)
+            [UserType.User]: this.userOTPService.userEmailVerification.bind(this.userOTPService)
         };
 
         const verifyEmailMethod = verifyEmailMethods[user];
@@ -87,7 +87,7 @@ class AuthenticationManagementFacade extends BaseFacade {
     async passwordReset(email, password, otpCode, user) {
         const verifyEmailMethods = {
             [UserType.Admin]: this.userOTPService.adminPasswordReset.bind(this.userOTPService),
-            [UserType.Member]: this.userOTPService.memberPasswordReset.bind(this.userOTPService)
+            [UserType.User]: this.userOTPService.userPasswordReset.bind(this.userOTPService)
         };
 
         const verifyEmailMethod = verifyEmailMethods[user];

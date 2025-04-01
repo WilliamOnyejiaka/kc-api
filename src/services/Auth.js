@@ -14,7 +14,7 @@ class Auth extends Authentication {
 
     async login(repo, logInDetails, cache, role) {
         const repoResult = role === "admin" ? await this.adminRepo.getAdminAndRoleWithEmail(logInDetails.email) : await repo.getUserProfileWithEmail(logInDetails.email);
-        
+
         const errorResponse = super.handleRepoError(repoResult);
         if (errorResponse) return errorResponse;
 
@@ -45,8 +45,8 @@ class Auth extends Authentication {
         return super.responseData(HttpStatus.NOT_FOUND, true, constants("404User"));
     }
 
-    async memberLogin(email, password) {
-        return await this.login(this.memberRepo, { email, password }, this.memberCache, UserType.user);
+    async userLogin(email, password) {
+        return await this.login(this.userRepo, { email, password }, this.userCache, UserType.User);
     }
 
     async adminLogin(email, password) {

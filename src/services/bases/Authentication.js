@@ -1,7 +1,7 @@
-const MemberCache = require("../../cache/MemberCache.js");
+const UserCache = require("../../cache/MemberCache.js");
 const TokenBlackList = require("../../cache/TokenBlackList.js");
 const env = require("../../config/env.js");
-const Member = require("../../repos/Member.js");
+const User = require("../../repos/User.js");
 const Admin = require("../../repos/Admin.js");
 const Token = require("../Token");
 const BaseService = require("./BaseService");
@@ -10,9 +10,9 @@ const AdminCache = require("../../cache/AdminCache.js");
 
 class Authentication extends BaseService {
 
-    memberCache = new MemberCache();
+    userCache = new UserCache();
     adminRepo = new Admin();
-    memberRepo = new Member();
+    userRepo = new User();
     adminCache = new AdminCache();
 
     constructor() {

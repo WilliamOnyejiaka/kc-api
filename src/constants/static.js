@@ -1,7 +1,7 @@
 
 const UserType = Object.freeze({
     Admin: "admin",
-    Member: "member"
+    User: "user"
 });
 
 
@@ -20,6 +20,7 @@ const ResourceType = Object.freeze({
 
 const CdnFolders = Object.freeze({
     PROFILEPICTURE: "kc-cdn/profile-pictures",
+    LISTINGPHOTOS: "kc-cdn/listing-photos"
 });
 
 module.exports = { UserType, OTPType, ResourceType, CdnFolders }

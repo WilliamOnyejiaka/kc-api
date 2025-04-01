@@ -7,23 +7,23 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Member {
-    id             Int                    @id @default(autoincrement())
+model User {
+    id             Int                  @id @default(autoincrement())
     firstName      String
     lastName       String
-    password       String
-    email          String                 @unique
-    verified       Boolean?               @default(false)
-    active         Boolean                @default(false)
-    isOauth        Boolean                @default(false)
-    oAuthDetails   String?
-    phoneNumber    String                 @unique
-    createdAt      DateTime               @default(now())
-    updatedAt      DateTime               @updatedAt
-    profilePicture MemberProfilePicture[]
+    password       String?
+    email          String               @unique
+    verified       Boolean?             @default(false)
+    active         Boolean              @default(false)
+    isOauth        Boolean              @default(false)
+    oAuthDetails   Json?
+    createdAt      DateTime             @default(now())
+    updatedAt      DateTime             @updatedAt
+    profilePicture UserProfilePicture[]
+    Listing        Listing[]
 }
 
-model MemberProfilePicture {
+model UserProfilePicture {
     id        Int      @id @default(autoincrement())
     mimeType  String
     imageUrl  String
@@ -31,8 +31,44 @@ model MemberProfilePicture {
     size      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    memberId  Int      @unique
-    member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+    userId    Int      @unique
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Listing {
+    id            Int            @id @default(autoincrement())
+    userId        Int
+    user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category      String
+    type          String
+    streetAddress String
+    aptSuite      String
+    city          String
+    province      String
+    country       String
+    guestCount    Int
+    bedroomCount  Int
+    bedCount      Int
+    bathroomCount Int
+    amenities     String[]       @default([])
+    listingPhotos ListingPhoto[]
+    title         String
+    description   String
+    price         Float
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+}
+
+model ListingPhoto {
+    id        Int      @id @default(autoincrement())
+    mimeType  String
+    imageUrl  String
+    publicId  String
+    size      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    listingId Int
+    listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
 
 enum PropertyType {

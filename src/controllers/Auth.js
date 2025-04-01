@@ -47,7 +47,7 @@ class Auth {
         };
     }
 
-    static async memberSignUp(req, res) {
+    static async userSignUp(req, res) {
         const validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
@@ -56,12 +56,11 @@ class Auth {
             return;
         }
 
-        const serviceResult = await Auth.facade.memberSignUp({
+        const serviceResult = await Auth.facade.userSignUp({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             password: req.body.password,
-            email: req.body.email,
-            phoneNumber: req.body.phoneNumber
+            email: req.body.email
         }, req.file);
         Controller.response(res, serviceResult);
     }

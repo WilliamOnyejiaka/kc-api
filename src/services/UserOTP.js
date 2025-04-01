@@ -11,7 +11,7 @@ class UserOTP extends Authentication {
         super();
     }
 
-    async sendUserOTP(repo, email, otpType, userType) {
+    async sendOTP(repo, email, otpType, userType) {
         console.log(userType);
 
         const repoResult = await repo.getUserProfileWithEmail(email);
@@ -30,12 +30,12 @@ class UserOTP extends Authentication {
         return super.responseData(404, true, constants('404User'));
     }
 
-    async sendMemberOTP(email, otpType) {
-        return await this.sendUserOTP(this.memberRepo, email, otpType, UserType.Member);
+    async sendUserOTP(email, otpType) {
+        return await this.sendOTP(this.userRepo, email, otpType, UserType.User);
     }
 
     async sendAdminOTP(email, otpType) {
-        return await this.sendUserOTP(this.adminRepo, email, otpType, UserType.Admin);
+        return await this.sendOTP(this.adminRepo, email, otpType, UserType.Admin);
     }
 
     async emailVerification(repo, cache, email, otpCode, userType) {
@@ -78,8 +78,8 @@ class UserOTP extends Authentication {
         return super.responseData(404, true, constants('404User'));
     }
 
-    async memberEmailVerification(email, otpCode) {
-        return await this.emailVerification(this.memberRepo, this.memberCache, email, otpCode, UserType.Member);
+    async userEmailVerification(email, otpCode) {
+        return await this.emailVerification(this.userRepo, this.userCache, email, otpCode, UserType.User);
     }
 
     async adminEmailVerification(email, otpCode) {
@@ -123,8 +123,8 @@ class UserOTP extends Authentication {
         return await this.passwordReset(this.adminRepo, this.adminCache, email, password, otpCode, UserType.Admin);
     }
 
-    async memberPasswordReset(email, password, otpCode) {
-        return await this.passwordReset(this.memberRepo, this.memberCache, email, password, otpCode, UserType.Member);
+    async userPasswordReset(email, password, otpCode) {
+        return await this.passwordReset(this.userRepo, this.userCache, email, password, otpCode, UserType.User);
     }
 }
 

@@ -1,14 +1,14 @@
 const prisma = require("./bases/prisma");
 const UserRepo = require("./bases/UserRepo");
 
-class Member extends UserRepo {
+class User extends UserRepo {
     constructor() {
-        super('member', 'profilePicture');
+        super('user', 'profilePicture');
     }
 
     async insert(data, media) {
         try {
-            const newItem = await prisma.member.create({
+            const newItem = await prisma.user.create({
                 data: {
                     ...data,
                     profilePicture: {
@@ -34,6 +34,24 @@ class Member extends UserRepo {
             return this.handleDatabaseError(error);
         }
     }
+
+    async insertOAuthUser(data){
+        try {
+            const newItem = await prisma.user.create({
+                data: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    isOauth: true,
+                    oAuthDetails: data.oAuthDetails,
+                    email: data.email
+                }
+            })
+            return this.repoResponse(false, 201, null, newItem);
+        } catch (error) {
+            console.log(error)
+            return this.handleDatabaseError(error);
+        }
+    }
 }
 
-module.exports = Member;
+module.exports = User;
