@@ -4,6 +4,7 @@ const handleMulterErrors = require("./../middlewares/handleMulterErrors.js");
 const validateJWT = require('./../middlewares/validateJWT.js');
 const { UserType } = require("../constants/static.js");
 const env = require('./env.js');
+const redisClient = require('./redis.js');
 
 function createApp() {
     const express = require('express');
@@ -15,8 +16,7 @@ function createApp() {
         write: (message) => logger.http(message.trim()),
     };
     const session = require('express-session');
-    // const passport = require('passport');
-    const GoogleStrategy = require('passport-google-oauth20').Strategy;
+    const { RedisStore } = require("connect-redis")
     const passport = require('./passport.js');
     require('dotenv').config();
 
@@ -25,10 +25,24 @@ function createApp() {
     app.use(express.json());
     app.use(morgan("combined", { stream }));
     app.use(express.json());
+    // app.use(session({
+    //     secret: env('secretKey'),
+    //     resave: false,
+    //     saveUninitialized: false,
+    // }));
+
+    // redisClient.connect().catch(console.error);
+
+    // Configure session with RedisStore
     app.use(session({
-        secret: env('secretKey'),
+        store: new  RedisStore({ client: redisClient }),
+        secret: process.env.SESSION_SECRET || 'your-secret-key-here',
         resave: false,
         saveUninitialized: false,
+        cookie: {
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            maxAge: 1000 * 60 * 60 * 24 // 1 day expiration (adjust as needed)
+        }
     }));
     app.use(passport.initialize());
     app.use(passport.session());

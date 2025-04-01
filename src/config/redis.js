@@ -16,4 +16,18 @@ redisClient.on('error', (err) => {
     console.error('Redis connection error:', err);
 });
 
+// Initialize ioredis client
+// const redisClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+//     // Optional configuration
+//     reconnectOnError: (err) => {
+//         console.error('Redis reconnectOnError:', err);
+//         return true; // Attempt to reconnect on error
+//     },
+//     retryStrategy: (times) => {
+//         return Math.min(times * 50, 2000); // Reconnect with backoff
+//     }
+// });
+
+//
+
 module.exports = redisClient;
