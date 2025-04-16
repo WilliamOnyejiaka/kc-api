@@ -25,13 +25,6 @@ function createApp() {
     app.use(express.json());
     app.use(morgan("combined", { stream }));
     app.use(express.json());
-    // app.use(session({
-    //     secret: env('secretKey'),
-    //     resave: false,
-    //     saveUninitialized: false,
-    // }));
-
-    // redisClient.connect().catch(console.error);
 
     // Configure session with RedisStore
     app.use(session({
@@ -47,40 +40,10 @@ function createApp() {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    // passport.use(new GoogleStrategy({
-    //     clientID: process.env.GOOGLE_CLIENT_ID,
-    //     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    //     callbackURL: 'http://localhost:3000/api/auth/google/callback',
-    // }, (accessToken, refreshToken, profile, done) => {
-    //     // console.log('Profile:', profile);
-    //     return done(null, profile);
-    // }));
-    // // Serialize and deserialize user for session management
-    // passport.serializeUser( (user, done) => {
-    //     done(null, user);
-    // });
-    // passport.deserializeUser((user, done) => {
-    //     done(null, user);
-    // });
-
     // Routes
     app.get('/', (req, res) => {
         res.send(req.user ? `Welcome, ${req.user.displayName}! <a href="/logout">Logout</a>` : '<a href="/auth/google">Login with Google</a>');
     });
-
-    // Google Auth Routes
-    // app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-    // app.get('/api/auth/google/callback',
-    //     passport.authenticate('google'),
-    //     (req, res) =>{ 
-    //         console.log('Callback Success, User:', req.user);
-    //         res.redirect('/')
-    //     },
-    //     (err, req, res, next) => {
-    //         console.error('OAuth Error:', err.oauthError || err);
-    //         res.status(500).send('Authentication failed');
-    //     }
-    // );
 
     // app.get('/auth/google/callbacks',
     //     passport.authenticate('google', { failureRedirect: '/' }),

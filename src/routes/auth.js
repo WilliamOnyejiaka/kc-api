@@ -37,12 +37,29 @@ auth.get('/google/callback', passport.authenticate('google'), asyncHandler(async
     const test = new repo();
     console.log('Callback Success, User:', req.user);
 
-    res.status(201).json(await test.insertOAuthUser({
-        firstName: req.user._json.given_name,
-        lastName: req.user._json.family_name,
-        email: req.user._json.email,
-        oAuthDetails: req.user._json
-    }))
+    const email = req.user._json.email;
+    const userExists = await test.getUserProfileWithEmail(email);
+    if(userExists.error){
+        res.status(400).json({
+            error: true,
+            message: userExists.message
+        });
+        return;
+    }
+    if(userExists.data){
+        res.status(200).json({
+            error: false,
+            message: "User has logged in successfully"
+        });
+        return;
+    }
+
+    // res.status(201).json(await test.insertOAuthUser({
+    //     firstName: req.user._json.given_name,
+    //     lastName: req.user._json.family_name,
+    //     email: req.user._json.email,
+    //     oAuthDetails: req.user._json
+    // }))
 
     // res.redirect('/')
 }),

@@ -6,7 +6,7 @@ class User extends UserRepo {
         super('user', 'profilePicture');
     }
 
-    async insert(data, media) {
+    async insertWithImage(data, media) {
         try {
             const newItem = await prisma.user.create({
                 data: {
@@ -20,7 +20,7 @@ class User extends UserRepo {
                         }
                     }
                 },
-                include:{
+                include: {
                     profilePicture: {
                         select: {
                             imageUrl: true
@@ -35,7 +35,21 @@ class User extends UserRepo {
         }
     }
 
-    async insertOAuthUser(data){
+    async insert(data) {
+        try {
+            const newItem = await prisma.user.create({
+                data: {
+                    ...data
+                },
+            })
+            return this.repoResponse(false, 201, null, newItem);
+        } catch (error) {
+            console.log(error)
+            return this.handleDatabaseError(error);
+        }
+    }
+
+    async insertOAuthUser(data) {
         try {
             const newItem = await prisma.user.create({
                 data: {

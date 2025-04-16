@@ -51,7 +51,6 @@ class Auth {
         const validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
-
             Controller.handleValidationErrors(res, validationErrors);
             return;
         }
