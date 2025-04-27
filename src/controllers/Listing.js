@@ -1,10 +1,11 @@
 const { validationResult } = require("express-validator");
 const Controller = require("./bases/Controller.js");
 const ListingRepo = require('./../repos/Listing.js');
-
+const ICloudinary = require("./../services/ICloudinary.js");
+const { ResourceType, CdnFolders } = require("./../constants/static.js");
 class Listing {
 
-    static async create(req,res){
+    static async create(req, res) {
         const validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
@@ -28,12 +29,7 @@ class Listing {
         req.body['bathroomCount'] = Number(req.body['bathroomCount']);
         req.body['price'] = Number(req.body['price']);
         req.body['amenities'] = JSON.parse(req.body['amenities']);
-        // req.body['amenities'] = ["Hello"];
 
-        // console.log(req.body['amenities']);
-        // console.log(JSON.parse(req.body['amenities']));
-        
-        
         const {
             category,
             type,
@@ -58,12 +54,23 @@ class Listing {
             ...req.body,
             userId: res.locals.data.id
         };
+        const cloudinary = new ICloudinary();
+
+        const { uploadedFiles, failedFiles, publicIds } = await cloudinary.upload(listingPhotos, ResourceType.IMAGE, CdnFolders.LISTINGPHOTOS);
+        const medias = uploadedFiles.map(media => {
+            return {
+                mimeType: media.mimeType,
+                imageUrl: media.url,
+                publicId: media.publicId,
+                size: media.size,
+            }
+        });
 
         res.status(400).json({
             'error': true,
             'message': listingPhotos.length,
             'user': res.locals.data.id,
-            'listing': await repo.insert(data,"ehhcd")
+            'listing': await repo.insert(data, medias)
         })
     }
 }

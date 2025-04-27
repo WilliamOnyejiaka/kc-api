@@ -25,7 +25,12 @@ class Listing extends Repo {
                     amenities: data.amenities,
                     title: data.title,
                     description: data.description,
-                    price: data.price
+                    price: data.price,
+                    listingPhotos: {
+                        createMany: {
+                            data: media
+                        }
+                    }
                 },
                 include: {
                     listingPhotos: {
